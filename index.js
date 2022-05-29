@@ -86,18 +86,30 @@ const removeTagHandler = (e) => {
     renderTags(store);
 }
 const changeReadOnlyStatusHandler = (e) => {
-    // e.preventDefault();
     setReadOnly(readonlyCheckbox.checked);
 }
 const setReadOnly = (isReadOnly) => {
-
+    let inputs = wrapperTagsApp.querySelectorAll('input');
+    let btns = wrapperTagsApp.querySelectorAll('button');
+    if(isReadOnly){
+        inputs.forEach(elem=>elem.setAttribute('disabled', 'disabled'));
+        btns.forEach(elem=>elem.setAttribute('disabled', 'disabled'));
+        addTagBtn.removeEventListener("click", addTagHandler);
+        readonlyCheckbox.removeEventListener("click", changeReadOnlyStatusHandler);
+        tagListWrapper.removeEventListener("click", removeTagHandler);
+    } else {
+        inputs.forEach(elem=>elem.removeAttribute('disabled'));
+        btns.forEach(elem=>elem.removeAttribute('disabled'));
+        addTagBtn.addEventListener("click", addTagHandler);
+        readonlyCheckbox.addEventListener("click", changeReadOnlyStatusHandler);
+        tagListWrapper.addEventListener("click", removeTagHandler);
+    }
+    
 }
 const firstOpenPage = () => {
     renderTags(getDataFromLocalStorageAsObj(TAGS));
+    changeReadOnlyStatusHandler();
 }
 
-addTagBtn.addEventListener("click", addTagHandler);
-readonlyCheckbox.addEventListener("click", changeReadOnlyStatusHandler);
-tagListWrapper.addEventListener("click", removeTagHandler);
-
 firstOpenPage();
+//to off read only mode try to reload page with ctrl+f5
